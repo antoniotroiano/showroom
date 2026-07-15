@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Antonio Troiano — Variante 3b · Blog Alternative (Split-Screen, Cover-Hero)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --oat: #EDE6D0;
+    --oat-deep: #D9CFB0;
+    --oat-light: #F6F1E0;
+    --ink: #1F1A28;
+    --ink-soft: #4A3F52;
+    --berry: #7B2D4E;
+    --berry-deep: #55203A;
+    --sage: #7A8471;
+    --hairline: #C9BFA5;
+
+    --step-0: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+    --step-1: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
+    --step-2: clamp(1.6rem, 1.2rem + 1.5vw, 2.4rem);
+    --step-3: clamp(2.5rem, 1.6rem + 3vw, 4rem);
+    --step-mega: clamp(4rem, 2rem + 10vw, 12rem);
+    --step-marquee: clamp(1rem, 1.6vw, 1.35rem);
+
+    --serif: 'Rozha One', 'Bodoni 72', Didot, serif;
+    --sans: 'Sora', -apple-system, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--oat);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: var(--step-0);
+    line-height: 1.6;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; display: block; }
+
+  .container { max-width: 1440px; margin: 0 auto; padding: 0 clamp(1.25rem, 3vw, 3rem); }
+  .full-bleed { width: 100vw; position: relative; left: 50%; margin-left: -50vw; }
+
+  /* NAV — smart sticky */
+  nav {
+    padding: 2rem 0;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--oat);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), padding 0.4s ease, background 0.3s ease, box-shadow 0.3s ease;
+  }
+  nav.scrolled {
+    padding: 1.1rem 0;
+    background: rgba(237, 230, 208, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 1px 0 var(--hairline);
+  }
+  nav.hidden { transform: translateY(-100%); }
+  .brand {
+    font-family: var(--serif);
+    font-size: 1.35rem;
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+  nav ul { list-style: none; display: flex; gap: 2.5rem; justify-content: center; flex-wrap: wrap; }
+  nav a {
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    padding-bottom: 0.15rem;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s, color 0.3s;
+  }
+  nav a:hover { border-color: var(--berry); color: var(--berry); }
+  .nav-tag {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+  }
+
+  /* HERO */
+  .hero {
+    display: grid;
+    grid-template-columns: 6fr 5fr;
+    gap: clamp(2rem, 5vw, 5rem);
+    padding: clamp(2rem, 6vw, 5rem) 0 clamp(4rem, 8vw, 7rem);
+    align-items: center;
+    min-height: 80vh;
+  }
+  .hero-copy .kicker {
+    font-size: 0.8rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--berry);
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .kicker::after {
+    content: ''; flex: 1; max-width: 8rem; height: 1px; background: var(--berry);
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: var(--step-mega);
+    font-weight: 400;
+    line-height: 0.86;
+    letter-spacing: -0.02em;
+    margin-bottom: 2.5rem;
+    text-wrap: balance;
+  }
+  .hero h1 .a1 { display: block; }
+  .hero h1 .a2 { display: block; color: var(--berry); font-style: italic; padding-left: 0.25em; }
+  .hero h1 .a3 { display: block; }
+  .hero-lede {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 42ch;
+    margin-bottom: 3rem;
+    font-weight: 300;
+  }
+  .cta-row { display: flex; gap: 2rem; align-items: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.75rem;
+    background: var(--ink); color: var(--oat);
+    padding: 1.1rem 2rem; text-decoration: none;
+    font-size: 0.85rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    border-radius: 999px;
+    transition: background 0.25s, transform 0.25s;
+  }
+  .btn:hover { background: var(--berry); transform: translateY(-2px); }
+  .btn-text {
+    color: var(--ink); text-decoration: none;
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em;
+    padding-bottom: 0.25rem; border-bottom: 1px solid var(--ink);
+    transition: color 0.25s, border-color 0.25s;
+  }
+  .btn-text:hover { color: var(--berry); border-color: var(--berry); }
+  .hero-art {
+    position: relative; aspect-ratio: 4/5;
+    overflow: hidden; border-radius: 4px;
+    box-shadow: 0 30px 60px -20px rgba(31,26,40,0.35);
+  }
+  .hero-art img { width: 100%; height: 100%; object-fit: cover; filter: saturate(1.05); }
+  .hero-art-tag {
+    position: absolute; top: 1.25rem; left: 1.25rem;
+    background: var(--oat); padding: 0.6rem 1rem;
+    font-size: 0.7rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--ink);
+    border-radius: 999px;
+  }
+  .hero-art-caption {
+    position: absolute; bottom: 1.25rem; left: 1.25rem; right: 1.25rem;
+    background: rgba(237,230,208,0.95); backdrop-filter: blur(8px);
+    padding: 1rem 1.25rem; border-radius: 4px;
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: baseline; gap: 1rem;
+  }
+  .hero-art-caption h4 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: 1.2rem; line-height: 1.1;
+  }
+  .hero-art-caption span {
+    font-size: 0.75rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--ink-soft);
+  }
+
+  /* HERO — Cover-Style (Video mit editorial Overlays) ✨ */
+  .hero-cover {
+    padding: clamp(1.5rem, 3vw, 2.5rem) 0 clamp(2rem, 4vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+  }
+  .cover-meta-top,
+  .cover-meta-bottom {
+    display: grid;
+    align-items: baseline;
+    gap: 2rem;
+    padding: 1rem 0;
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .cover-meta-top {
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .cover-meta-top .cat { color: var(--berry); font-weight: 500; }
+  .cover-meta-top .location { text-align: right; }
+  .cover-meta-bottom {
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--hairline);
+  }
+  .cover-meta-bottom .right { text-align: right; }
+  .cover-meta-bottom a {
+    color: var(--berry);
+    text-decoration: none;
+    font-weight: 500;
+    padding-bottom: 0.15rem;
+    border-bottom: 1px solid var(--berry);
+    transition: color 0.2s;
+  }
+  .cover-meta-bottom a:hover { color: var(--berry-deep); }
+
+  .cover-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    box-shadow: 0 30px 60px -25px rgba(31,26,40,0.4);
+    aspect-ratio: 16/9;
+  }
+  .cover-frame video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: contrast(1.02) saturate(0.98);
+  }
+
+  .cover-tag-top {
+    position: absolute;
+    top: clamp(1rem, 2vw, 1.75rem);
+    left: clamp(1rem, 2vw, 1.75rem);
+    background: var(--berry);
+    color: var(--oat-light);
+    padding: 0.6rem 1.1rem;
+    border-radius: 999px;
+    font-family: var(--sans);
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 500;
+    z-index: 2;
+    box-shadow: 0 10px 25px -8px rgba(31,26,40,0.35);
+  }
+
+  .cover-title-plaque {
+    position: absolute;
+    bottom: clamp(1rem, 3vw, 2rem);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--oat-light);
+    padding: clamp(1rem, 2vw, 1.5rem) clamp(1.5rem, 3vw, 2.5rem);
+    border-radius: 4px;
+    max-width: min(78%, 760px);
+    z-index: 2;
+    box-shadow: 0 15px 30px -12px rgba(31,26,40,0.3);
+  }
+  .cover-title-plaque h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 3.5vw, 3rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    font-weight: 400;
+    text-align: center;
+    margin: 0;
+  }
+  .cover-title-plaque h1 em {
+    color: var(--berry);
+    font-style: italic;
+  }
+  .cover-title-plaque .work-line {
+    display: block;
+    margin-top: 0.7rem;
+    font-family: var(--sans);
+    font-size: 0.65rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+
+  @media (max-width: 780px) {
+    .cover-meta-top,
+    .cover-meta-bottom {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+      text-align: center;
+    }
+    .cover-meta-top .location { text-align: center; }
+    .cover-meta-bottom .right { text-align: center; }
+    .cover-title-plaque {
+      max-width: 92%;
+      padding: 0.85rem 1rem;
+    }
+    .cover-title-plaque h1 { font-size: clamp(1.2rem, 5vw, 1.75rem); }
+    .cover-tag-top {
+      padding: 0.4rem 0.85rem;
+      font-size: 0.6rem;
+    }
+  }
+
+  /* MARQUEE ✨ */
+  .marquee {
+    overflow: hidden;
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+    padding: 0.7rem 0;
+    background: var(--oat-light);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 3rem;
+    animation: scroll-left 45s linear infinite;
+    white-space: nowrap;
+    width: max-content;
+    font-family: var(--serif);
+    font-size: var(--step-marquee);
+    color: var(--ink);
+    font-weight: 400;
+  }
+  .marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 3rem;
+    padding-right: 3rem;
+    letter-spacing: -0.01em;
+  }
+  .marquee-item::after {
+    content: '●';
+    color: var(--berry);
+    font-size: 0.35em;
+  }
+  @keyframes scroll-left {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+
+  /* CHAPTER CARDS ✨ */
+  .chapter-card {
+    padding: clamp(6rem, 12vw, 10rem) 0;
+    text-align: center;
+    position: relative;
+    background: var(--oat);
+  }
+  .chapter-card.alt { background: var(--oat-light); }
+  .chapter-card .chap-label {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 1.5rem;
+  }
+  .chapter-card .chap-num {
+    font-family: var(--serif);
+    font-size: clamp(6rem, 18vw, 22rem);
+    line-height: 0.82;
+    color: var(--berry);
+    letter-spacing: -0.05em;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+  .chapter-card .chap-title {
+    font-family: var(--serif);
+    font-size: var(--step-3);
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .chapter-card .chap-title em { font-style: italic; color: var(--berry); }
+  .chapter-card .chap-sub {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: var(--step-1);
+    max-width: 42ch;
+    margin: 0 auto;
+    line-height: 1.4;
+  }
+  .chapter-card::before, .chapter-card::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3rem;
+    height: 1px;
+    background: var(--berry);
+  }
+  .chapter-card::before { top: 4rem; }
+  .chapter-card::after { bottom: 4rem; }
+
+  /* HORIZONTAL SCROLL GALLERY ✨ */
+  .h-gallery-section {
+    padding: clamp(3rem, 6vw, 5rem) 0 clamp(4rem, 8vw, 7rem);
+  }
+  .h-gallery-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0 clamp(1.25rem, 4vw, 3rem);
+    margin-bottom: 3rem;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .h-gallery-head .label {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .h-gallery-hint {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--berry);
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .h-gallery-hint::before { content: '←'; }
+  .h-gallery-hint::after { content: '→'; }
+
+  .h-gallery {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding: clamp(1.25rem, 4vw, 3rem);
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2rem;
+  }
+  .h-gallery::-webkit-scrollbar { height: 3px; }
+  .h-gallery::-webkit-scrollbar-track { background: var(--hairline); }
+  .h-gallery::-webkit-scrollbar-thumb { background: var(--berry); }
+
+  .h-gallery-track {
+    display: flex;
+    gap: 2rem;
+    padding: 0 clamp(1.25rem, 4vw, 3rem);
+    width: max-content;
+  }
+  .slide {
+    flex: 0 0 auto;
+    width: min(65vw, 480px);
+    scroll-snap-align: center;
+    cursor: pointer;
+  }
+  .slide-frame {
+    aspect-ratio: 4/5;
+    overflow: hidden;
+    background: var(--oat-deep);
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 20px 40px -20px rgba(31,26,40,0.25);
+  }
+  .slide-frame img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.2,0.8,0.2,1);
+  }
+  .slide:hover .slide-frame img { transform: scale(1.04); }
+  .slide-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+  .slide-info .no {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--berry);
+    margin-bottom: 0.4rem;
+  }
+  .slide-info h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+  .slide-info h3 em { font-style: italic; color: var(--berry); }
+  .slide-info .year {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--sage);
+    font-size: 1rem;
+  }
+
+  /* MANIFESTO — berry drench */
+  .manifesto {
+    background: var(--berry);
+    color: var(--oat);
+    padding: clamp(3.5rem, 7vw, 6rem) clamp(1.25rem, 3vw, 3rem);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .manifesto::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(255,255,255,0.08) 0%, transparent 40%),
+      radial-gradient(ellipse at 80% 70%, rgba(31,26,40,0.25) 0%, transparent 55%);
+    pointer-events: none;
+  }
+  .manifesto-inner { max-width: 1000px; margin: 0 auto; position: relative; }
+  .manifesto .label {
+    color: rgba(237,230,208,0.7);
+    margin-bottom: 2rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    display: block;
+  }
+  .manifesto blockquote {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 4vw, 3.4rem);
+    line-height: 1.05;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    color: var(--oat-light);
+  }
+  .manifesto blockquote em { font-style: italic; color: var(--ink); }
+  .manifesto cite {
+    display: block; margin-top: 2rem;
+    font-family: var(--sans); font-style: normal;
+    font-size: 0.8rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--oat);
+    font-weight: 500;
+  }
+
+  /* SHOP */
+  .shop { padding: clamp(5rem, 10vw, 9rem) 0; }
+  .shop-head { text-align: center; margin-bottom: 4rem; }
+  .shop-head .label {
+    display: block; margin-bottom: 1.25rem;
+    font-size: 0.75rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--ink-soft);
+  }
+  .shop-head h2 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: var(--step-3); line-height: 1; letter-spacing: -0.02em;
+  }
+  .shop-head h2 em { color: var(--berry); font-style: italic; }
+  .shop-head p {
+    max-width: 50ch; margin: 1.5rem auto 0;
+    color: var(--ink-soft); font-size: 1.05rem;
+  }
+  .shop-items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+  .shop-item {
+    background: var(--oat-light); border-radius: 6px; overflow: hidden;
+    transition: transform 0.4s, box-shadow 0.4s;
+  }
+  .shop-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px rgba(31,26,40,0.2);
+  }
+  .shop-item-img { aspect-ratio: 1; overflow: hidden; }
+  .shop-item-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
+  .shop-item:hover .shop-item-img img { transform: scale(1.05); }
+  .shop-item-body { padding: 1.75rem; }
+  .shop-item-top {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--hairline);
+  }
+  .shop-item-top h3 { font-family: var(--serif); font-weight: 400; font-size: 1.4rem; line-height: 1; }
+  .shop-item-top .price { font-family: var(--serif); font-style: italic; font-size: 1.4rem; color: var(--berry); }
+  .shop-item-meta {
+    font-size: 0.75rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--ink-soft); margin-bottom: 1.5rem;
+  }
+  .shop-item-cta {
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--ink); text-decoration: none;
+    font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500;
+  }
+  .shop-item-cta::after { content: '→'; transition: transform 0.25s; }
+  .shop-item:hover .shop-item-cta::after { transform: translateX(4px); }
+
+  /* ARTIST — typographic monogram (V1 design, Aurora Berry palette) */
+  .artist-block { padding: clamp(5rem, 10vw, 9rem) 0; border-top: 1px solid var(--hairline); }
+  .artist {
+    display: grid;
+    grid-template-columns: 4fr 8fr;
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+  .artist-mark {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(5rem, 12vw, 12rem);
+    line-height: 0.85;
+    color: var(--berry);
+    letter-spacing: -0.05em;
+  }
+  .artist p {
+    font-family: var(--serif);
+    font-size: clamp(1.15rem, 1rem + 0.5vw, 1.5rem);
+    line-height: 1.5;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+  }
+  .artist p em { color: var(--berry); font-style: italic; }
+  .artist a.btn { margin-top: 1rem; }
+
+  /* BLOG ✨ — journal split-screen alternating entries */
+  .blog { padding: clamp(4rem, 8vw, 7rem) 0; }
+
+  .blog-entries {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .blog-entry {
+    display: grid;
+    grid-template-columns: 6fr 5fr;
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+    padding: clamp(1.5rem, 2.5vw, 2rem) 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .blog-entry:first-child { padding-top: 0; }
+  .blog-entry:last-child { border-bottom: none; padding-bottom: 0; }
+
+  /* Even entries flip: image right, text left */
+  .blog-entry:nth-child(even) .blog-entry-media { order: 2; }
+  .blog-entry:nth-child(even) .blog-entry-body { order: 1; }
+  .blog-entry:nth-child(even) { grid-template-columns: 5fr 6fr; }
+
+  .blog-entry-media {
+    aspect-ratio: 3/2;
+    overflow: hidden;
+    border-radius: 4px;
+    position: relative;
+  }
+  .blog-entry-media img {
+    width: 100%; height: 100%; object-fit: cover;
+    object-position: center;
+    filter: saturate(1.05);
+    transition: transform 0.7s cubic-bezier(0.2,0.8,0.2,1);
+  }
+  .blog-entry:hover .blog-entry-media img { transform: scale(1.03); }
+
+  .blog-entry-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.95rem;
+  }
+
+  .blog-entry-num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 0.85;
+    color: var(--berry);
+    letter-spacing: -0.03em;
+  }
+
+  .blog-entry-meta {
+    display: flex;
+    gap: 1.25rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--hairline);
+    align-items: baseline;
+  }
+  .blog-entry-meta .blog-cat {
+    color: var(--berry);
+    font-weight: 500;
+  }
+  .blog-entry-meta .read-time {
+    margin-left: auto;
+    font-family: var(--serif);
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+  }
+
+  .blog-entry-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.4rem, 2.2vw, 2.1rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .blog-entry-title em {
+    font-style: italic;
+    color: var(--berry);
+  }
+
+  .blog-entry-excerpt {
+    font-family: var(--serif);
+    font-size: var(--step-1);
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 52ch;
+  }
+
+  .blog-entry-cta {
+    align-self: flex-start;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--ink);
+    transition: color 0.25s, border-color 0.25s, gap 0.25s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .blog-entry-cta:hover {
+    color: var(--berry);
+    border-color: var(--berry);
+    gap: 1rem;
+  }
+
+  .blog-more {
+    text-align: center;
+    margin-top: clamp(4rem, 6vw, 5rem);
+  }
+
+  /* CONTACT ✨ */
+  .contact {
+    padding: clamp(4rem, 8vw, 7rem) 0 clamp(4rem, 7vw, 6rem);
+    border-top: 1px solid var(--hairline);
+    text-align: center;
+  }
+  .contact-label {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+  .contact-question {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 26ch;
+    margin: 0 auto 1.5rem;
+    color: var(--ink);
+  }
+  .contact-question em {
+    font-style: italic;
+    color: var(--berry);
+  }
+  .contact-text {
+    font-family: var(--serif);
+    font-size: clamp(1.05rem, 1.2vw, 1.25rem);
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 52ch;
+    margin: 0 auto 2.5rem;
+  }
+  .contact-ctas {
+    display: flex;
+    gap: 1.25rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 3.5rem;
+  }
+  .contact-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.95rem 1.9rem;
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.25s;
+  }
+  .contact-cta.primary {
+    background: var(--ink);
+    color: var(--oat);
+    border-color: var(--ink);
+  }
+  .contact-cta.primary:hover {
+    background: var(--berry);
+    border-color: var(--berry);
+    transform: translateY(-2px);
+  }
+  .contact-cta.secondary {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--hairline);
+  }
+  .contact-cta.secondary:hover {
+    color: var(--berry);
+    border-color: var(--berry);
+    transform: translateY(-2px);
+  }
+  .contact-social {
+    display: flex;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    justify-content: center;
+    flex-wrap: wrap;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--hairline);
+    max-width: 32rem;
+    margin: 0 auto;
+  }
+  .contact-social a {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .contact-social a:hover { color: var(--berry); }
+
+  /* FOOTER */
+  footer { background: var(--ink); color: var(--oat); padding: 5rem 0 2rem; }
+  footer .container { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; }
+  .foot-brand { font-family: var(--serif); font-size: 2rem; line-height: 1; margin-bottom: 1.25rem; }
+  .foot-tag {
+    font-size: 0.75rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: rgba(237,230,208,0.6);
+    max-width: 32ch; line-height: 1.6;
+  }
+  .foot-col h4 {
+    font-size: 0.7rem; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--berry);
+    margin-bottom: 1.5rem; font-weight: 500;
+  }
+  .foot-col a {
+    display: block; color: rgba(237,230,208,0.85);
+    text-decoration: none; font-size: 0.9rem; padding: 0.35rem 0;
+  }
+  .foot-col a:hover { color: var(--oat); }
+  .foot-bottom {
+    max-width: 1400px; margin: 4rem auto 0;
+    padding: 2rem clamp(1.25rem, 4vw, 3rem) 0;
+    border-top: 1px solid rgba(237,230,208,0.15);
+    display: flex; justify-content: space-between;
+    font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(237,230,208,0.5); flex-wrap: wrap; gap: 1rem;
+  }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-art { aspect-ratio: 4/5; max-height: 70vh; }
+    .slide { width: 80vw; }
+    .shop-items { grid-template-columns: 1fr; }
+    .blog-entry,
+    .blog-entry:nth-child(even) {
+      grid-template-columns: 1fr;
+    }
+    .blog-entry:nth-child(even) .blog-entry-media { order: 1; }
+    .blog-entry:nth-child(even) .blog-entry-body { order: 2; }
+    .artist { grid-template-columns: 1fr; }
+    footer .container { grid-template-columns: 1fr 1fr; }
+    nav ul { display: none; }
+    .foot-bottom { flex-direction: column; }
+  }
+  @media (max-width: 560px) {
+    footer .container { grid-template-columns: 1fr; }
+    .h-gallery-head { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <nav>
+    <div class="brand">Antonio Troiano</div>
+    <ul>
+      <li><a href="#werk">Werk</a></li>
+      <li><a href="#geschichten">Geschichten</a></li>
+      <li><a href="#erwerben">Erwerben</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero-cover">
+    <div class="cover-meta-top">
+      <span class="cat">Abstrakte Malerei</span>
+      <span class="location">Atelier Frankfurt am Main</span>
+    </div>
+
+    <div class="cover-frame">
+      <span class="cover-tag-top">— Aktuell im Atelier</span>
+      <video autoplay muted loop playsinline poster="https://ik.imagekit.io/atart/portfolio/2024_no10_1.webp?tr=w-1200,c-at_max,q-70,f-avif">
+        <source src="https://ik.imagekit.io/atart/HeroVideo1280x720v3.mp4" type="video/mp4">
+      </video>
+      <div class="cover-title-plaque">
+        <h1>Farbe als <em>Sprache,</em> Leinwand als Raum.</h1>
+        <span class="work-line">N° 10 · Gebirgskette · Acryl auf Leinwand, 2024</span>
+      </div>
+    </div>
+
+    <div class="cover-meta-bottom">
+      <span>Antonio Troiano · seit 2011</span>
+      <span class="right"><a href="#werk">Werke entdecken ↓</a></span>
+    </div>
+  </section>
+</div>
+
+<!-- MANIFESTO ✨ moved to opening statement -->
+<section class="manifesto full-bleed">
+  <div class="manifesto-inner">
+    <span class="label">— Manifest</span>
+    <blockquote>
+      Jedes Kunstwerk lebt davon, dass jeder <em>Betrachter</em> etwas Eigenes darin entdeckt.
+    </blockquote>
+    <cite>Antonio Troiano</cite>
+  </div>
+</section>
+
+<!-- MARQUEE ✨ -->
+<div class="marquee full-bleed" aria-hidden="true">
+  <div class="marquee-track">
+    <span class="marquee-item">Abstrakte Malerei</span>
+    <span class="marquee-item">Frankfurt am Main</span>
+    <span class="marquee-item">seit 2011</span>
+    <span class="marquee-item">Handgemalt</span>
+    <span class="marquee-item">Unikate</span>
+    <span class="marquee-item">Signiert</span>
+    <span class="marquee-item">Versand DE</span>
+    <span class="marquee-item">Abstrakte Malerei</span>
+    <span class="marquee-item">Frankfurt am Main</span>
+    <span class="marquee-item">seit 2011</span>
+    <span class="marquee-item">Handgemalt</span>
+    <span class="marquee-item">Unikate</span>
+    <span class="marquee-item">Signiert</span>
+    <span class="marquee-item">Versand DE</span>
+  </div>
+</div>
+
+<!-- CHAPTER I ✨ -->
+<section class="chapter-card" id="werk">
+  <div class="container">
+    <div class="chap-label">Kapitel I</div>
+    <span class="chap-num">I</span>
+    <h2 class="chap-title">Werk <em>&amp; Sicht</em></h2>
+    <p class="chap-sub">Eine kuratierte Auswahl aktueller Arbeiten — bitte scrollen Sie horizontal durch die Sammlung.</p>
+  </div>
+</section>
+
+<!-- HORIZONTAL SCROLL GALLERY ✨ -->
+<section class="h-gallery-section full-bleed">
+  <div class="h-gallery-head">
+    <span class="label">— Fünf Werke, ein Gang</span>
+    <span class="h-gallery-hint">Horizontal scrollen</span>
+  </div>
+  <div class="h-gallery">
+    <div class="h-gallery-track">
+      <article class="slide">
+        <div class="slide-frame">
+          <img src="https://ik.imagekit.io/atart/portfolio/2024_no10_1.webp?tr=w-900,c-at_max,q-75,f-avif" alt="Gebirgskette">
+        </div>
+        <div class="slide-info">
+          <div>
+            <div class="no">N° 10 · Acryl</div>
+            <h3>Gebirgskette</h3>
+          </div>
+          <span class="year">2024</span>
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="slide-frame">
+          <img src="https://ik.imagekit.io/atart/portfolio/2023_no2_1.webp?tr=w-900,c-at_max,q-75,f-avif" alt="No. 02">
+        </div>
+        <div class="slide-info">
+          <div>
+            <div class="no">N° 02 · Acryl</div>
+            <h3><em>Ohne Titel</em></h3>
+          </div>
+          <span class="year">2023</span>
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="slide-frame">
+          <img src="https://ik.imagekit.io/atart/portfolio/2024_no3.webp?tr=w-900,c-at_max,q-75,f-avif" alt="No. 03">
+        </div>
+        <div class="slide-info">
+          <div>
+            <div class="no">N° 03 · Acryl</div>
+            <h3><em>Ohne Titel</em></h3>
+          </div>
+          <span class="year">2024</span>
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="slide-frame">
+          <img src="https://ik.imagekit.io/atart/portfolio/2023_no10.webp?tr=w-900,c-at_max,q-75,f-avif" alt="No. 10">
+        </div>
+        <div class="slide-info">
+          <div>
+            <div class="no">N° 10 · Mixed</div>
+            <h3><em>Ohne Titel</em></h3>
+          </div>
+          <span class="year">2023</span>
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="slide-frame">
+          <img src="https://ik.imagekit.io/atart/shop/2024_no4_1.webp?tr=w-900,c-at_max,q-75,f-avif" alt="No. 04">
+        </div>
+        <div class="slide-info">
+          <div>
+            <div class="no">N° 04 · Acryl</div>
+            <h3><em>Ohne Titel</em></h3>
+          </div>
+          <span class="year">2024</span>
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="slide-frame">
+          <img src="https://ik.imagekit.io/atart/shop/2022_no8_1.webp?tr=w-900,c-at_max,q-75,f-avif" alt="No. 08">
+        </div>
+        <div class="slide-info">
+          <div>
+            <div class="no">N° 08 · Acryl</div>
+            <h3><em>Ohne Titel</em></h3>
+          </div>
+          <span class="year">2022</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CHAPTER II ✨ -->
+<section class="chapter-card alt" id="geschichten">
+  <div class="container">
+    <div class="chap-label">Kapitel II</div>
+    <span class="chap-num">II</span>
+    <h2 class="chap-title">Geschichten <em>aus dem Atelier</em></h2>
+    <p class="chap-sub">Jedes Werk hat einen Anfang — einen Moment, eine Stimmung, einen Gedanken. Hier erzähle ich, was hinter den Bildern steht.</p>
+  </div>
+</section>
+
+<!-- BLOG ✨ — journal split-screen alternating -->
+<section class="blog" id="blog">
+  <div class="container">
+    <div class="blog-entries">
+      <article class="blog-entry">
+        <div class="blog-entry-media">
+          <img src="https://ik.imagekit.io/atart/portfolio/2024_no10_1.webp?tr=w-1000,c-at_max,q-75,f-avif" alt="Gebirgskette">
+        </div>
+        <div class="blog-entry-body">
+          <div class="blog-entry-num">01</div>
+          <div class="blog-entry-meta">
+            <span class="blog-cat">Werkgeschichte</span>
+            <span>Juni 2026</span>
+            <span class="read-time">8 Min. Lesezeit</span>
+          </div>
+          <h3 class="blog-entry-title">Wie „Gebirgskette" entstand — an einem <em>stillen Morgen</em></h3>
+          <p class="blog-entry-excerpt">Es begann mit dem Blick aus dem Atelierfenster: ein ferner Bergkamm, kaum sichtbar. Über Wochen wurden daraus tiefe Schichten aus Acryl und Licht — bis eines Morgens die Türkistöne durchbrachen und das Bild seinen eigenen Weg zu finden begann.</p>
+          <a href="#" class="blog-entry-cta"><span>Weiterlesen</span><span>→</span></a>
+        </div>
+      </article>
+
+      <article class="blog-entry">
+        <div class="blog-entry-media">
+          <img src="https://ik.imagekit.io/atart/portfolio/2023_no2_1.webp?tr=w-1000,c-at_max,q-75,f-avif" alt="Zehn Jahre Pause">
+        </div>
+        <div class="blog-entry-body">
+          <div class="blog-entry-num">02</div>
+          <div class="blog-entry-meta">
+            <span class="blog-cat">Erinnerung</span>
+            <span>April 2026</span>
+            <span class="read-time">6 Min. Lesezeit</span>
+          </div>
+          <h3 class="blog-entry-title">Zehn Jahre Pause — und der Weg zurück an die <em>Leinwand</em></h3>
+          <p class="blog-entry-excerpt">Warum ich das Malen erst verlor und dann wiederfand. Eine ehrliche Notiz über Zweifel, Neustart und das Vertrauen in den eigenen Pinselstrich — geschrieben im Frühling nach der ersten wiedergefundenen Serie.</p>
+          <a href="#" class="blog-entry-cta"><span>Weiterlesen</span><span>→</span></a>
+        </div>
+      </article>
+    </div>
+
+    <div class="blog-more">
+      <a href="#" class="btn">Alle Geschichten →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CHAPTER III ✨ -->
+<section class="chapter-card" id="erwerben">
+  <div class="container">
+    <div class="chap-label">Kapitel III</div>
+    <span class="chap-num">III</span>
+    <h2 class="chap-title">Originale <em>erwerben</em></h2>
+    <p class="chap-sub">Originale, die ein Zuhause suchen. Handgemalt, signiert, mit Zertifikat versendet.</p>
+  </div>
+</section>
+
+<section class="shop" id="shop">
+  <div class="container">
+    <div class="shop-items">
+      <article class="shop-item">
+        <div class="shop-item-img"><img src="https://ik.imagekit.io/atart/shop/2024_no4_1.webp?tr=w-700,h-700,c-fill,q-75,f-auto" alt="No. 04"></div>
+        <div class="shop-item-body">
+          <div class="shop-item-top">
+            <h3>N° 04</h3>
+            <div class="price">240 €</div>
+          </div>
+          <div class="shop-item-meta">2024 · Acryl · Leinwand</div>
+          <a href="#" class="shop-item-cta"><span>Anfragen</span></a>
+        </div>
+      </article>
+
+      <article class="shop-item">
+        <div class="shop-item-img"><img src="https://ik.imagekit.io/atart/shop/2022_no8_1.webp?tr=w-700,h-700,c-fill,q-75,f-auto" alt="No. 08"></div>
+        <div class="shop-item-body">
+          <div class="shop-item-top">
+            <h3>N° 08</h3>
+            <div class="price">200 €</div>
+          </div>
+          <div class="shop-item-meta">2022 · Acryl · Leinwand</div>
+          <a href="#" class="shop-item-cta"><span>Anfragen</span></a>
+        </div>
+      </article>
+
+      <article class="shop-item">
+        <div class="shop-item-img"><img src="https://ik.imagekit.io/atart/shop/2023_no2_1.webp?tr=w-700,h-700,c-fill,q-75,f-auto" alt="No. 02"></div>
+        <div class="shop-item-body">
+          <div class="shop-item-top">
+            <h3>N° 02</h3>
+            <div class="price">240 €</div>
+          </div>
+          <div class="shop-item-meta">2023 · Acryl · Leinwand</div>
+          <a href="#" class="shop-item-cta"><span>Anfragen</span></a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="artist-block" id="atelier">
+  <div class="container">
+    <div class="artist">
+      <div class="artist-mark">at.</div>
+      <div>
+        <p>Nach mehr als einem Jahrzehnt habe ich die Malerei <em>wiedergefunden</em> — und meinen Weg zur abstrakten Kunst entdeckt. Mich reizt vor allem die Freiheit: keinem Stil folgen zu müssen, sondern auszudrücken, was ich gerade fühle.</p>
+        <p>Türkis- und Naturtöne begleiten viele meiner Werke — sie schaffen eine Balance zwischen Tiefe, Energie und Ruhe.</p>
+        <a href="#" class="btn">Mehr über den Künstler →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT — Editorial invitation, not a form -->
+<section class="contact" id="kontakt">
+  <div class="container">
+    <span class="contact-label">— Kontakt</span>
+    <h2 class="contact-question">Ein Werk gefunden? Oder eine Idee für einen <em>Auftrag</em>?</h2>
+    <p class="contact-text">Ich freue mich über jede Nachricht — ob zu einem bestimmten Bild, einer Auftragsarbeit für deinen Raum oder einfach so.</p>
+    <div class="contact-ctas">
+      <a href="mailto:kontakt@antonio-troiano.de?subject=Anfrage%20%C3%BCber%20antonio-troiano.de" class="contact-cta primary">Schreib mir →</a>
+      <a href="mailto:kontakt@antonio-troiano.de?subject=Anfrage%3A%20Auftragsarbeit&body=Hallo%20Antonio%2C%0A%0Aich%20interessiere%20mich%20f%C3%BCr%20eine%20Auftragsarbeit.%0A%0AWerk-Idee%3A%0A%0AGew%C3%BCnschtes%20Format%3A%0A%0AFarbrichtung%3A%0A%0ABudget-Rahmen%3A%0A%0AZeitplan%3A%0A%0AViele%20Gr%C3%BC%C3%9Fe" class="contact-cta secondary">Auftrag anfragen →</a>
+    </div>
+    <div class="contact-social">
+      <a href="https://instagram.com" target="_blank" rel="noopener">Instagram ↗</a>
+      <a href="https://youtube.com" target="_blank" rel="noopener">YouTube ↗</a>
+      <a href="https://pinterest.com" target="_blank" rel="noopener">Pinterest ↗</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div>
+      <div class="foot-brand">Antonio Troiano</div>
+      <div class="foot-tag">Abstrakte Malerei aus Frankfurt am Main. Handgefertigte Originale, versandbereit innerhalb Deutschlands.</div>
+    </div>
+    <div class="foot-col">
+      <h4>Werke</h4>
+      <a href="#">Portfolio</a>
+      <a href="#">Shop</a>
+      <a href="#">Auftragsarbeit</a>
+    </div>
+    <div class="foot-col">
+      <h4>Folgen</h4>
+      <a href="#">Instagram</a>
+      <a href="#">YouTube</a>
+      <a href="#">Pinterest</a>
+    </div>
+    <div class="foot-col">
+      <h4>Kontakt</h4>
+      <a href="#">Nachricht senden</a>
+      <a href="#">Atelier besuchen</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <div>© 2026 · Antonio Troiano</div>
+    <div><a href="#" style="color: inherit; text-decoration: none; margin-right: 1.5rem;">Impressum</a> <a href="#" style="color: inherit; text-decoration: none;">Datenschutz</a></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const nav = document.querySelector('nav');
+  if(!nav) return;
+  let lastY = window.pageYOffset;
+  let ticking = false;
+  const threshold = 80;
+  function update(){
+    const y = window.pageYOffset;
+    const diff = y - lastY;
+    if(y > threshold) nav.classList.add('scrolled');
+    else { nav.classList.remove('scrolled'); nav.classList.remove('hidden'); }
+    if(Math.abs(diff) > 6 && y > threshold){
+      if(diff > 0) nav.classList.add('hidden');
+      else nav.classList.remove('hidden');
+      lastY = y;
+    }
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => {
+    if(!ticking){ requestAnimationFrame(update); ticking = true; }
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>
