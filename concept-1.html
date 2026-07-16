@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Antonio Troiano — Variante 1 · Mit Story, H-Scroll, Blog-Split &amp; Cover-Hero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400;0,700;1,400;1,700&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #EDE6D8;
+    --paper-deep: #E2D9C6;
+    --ink: #17130F;
+    --ink-soft: #4A423A;
+    --tuerkis: #2B7A72;
+    --tuerkis-deep: #1E5A55;
+    --terracotta: #A64D2E;
+    --muted: #B8AC97;
+    --rule: #D5C9B0;
+
+    --step-0: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+    --step-1: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
+    --step-2: clamp(1.5rem, 1.2rem + 1.2vw, 2.1rem);
+    --step-3: clamp(2.2rem, 1.6rem + 2.5vw, 3.4rem);
+    --step-4: clamp(3.5rem, 2rem + 6vw, 7rem);
+    --step-marquee: clamp(1rem, 1.6vw, 1.35rem);
+
+    --serif: 'Vollkorn', 'Iowan Old Style', Georgia, serif;
+    --sans: 'Karla', -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+  body {
+    overflow-x: hidden;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: var(--step-0);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  .wrap { max-width: 1440px; margin: 0 auto; padding: 0 clamp(1.25rem, 3vw, 3rem); }
+
+  /* NAV — smart sticky */
+  nav {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    padding: 2rem 0 3rem;
+    gap: 2rem;
+    border-bottom: 1px solid var(--rule);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--paper);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), padding 0.4s ease, background 0.3s ease;
+  }
+  nav.scrolled {
+    padding: 1.1rem 0;
+    background: rgba(237, 230, 216, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  nav.hidden { transform: translateY(-100%); }
+  .logo {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: var(--step-1);
+    letter-spacing: -0.01em;
+  }
+  .logo span { color: var(--tuerkis); }
+  nav ul { list-style: none; display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; }
+  nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding-bottom: 0.2rem;
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  nav a:hover { color: var(--ink); border-color: var(--ink); }
+  .nav-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+    position: relative;
+    z-index: 200;
+    justify-self: end;
+  }
+  .nav-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--ink);
+    margin: 5px auto;
+    transition: transform 0.3s, opacity 0.3s;
+    border-radius: 1px;
+  }
+  .nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .edition {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  /* HERO */
+  .hero {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: clamp(2rem, 5vw, 5rem);
+    padding: clamp(3rem, 8vw, 7rem) 0;
+    align-items: end;
+  }
+  .hero-text .eyebrow {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--tuerkis);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .eyebrow::before { content: ''; width: 3rem; height: 1px; background: var(--tuerkis); }
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: var(--step-4);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 2rem;
+  }
+  .hero h1 em { font-style: italic; font-weight: 400; color: var(--tuerkis-deep); }
+  .hero-text p {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 40ch;
+    margin-bottom: 2.5rem;
+  }
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--ink);
+    transition: gap 0.2s;
+  }
+  .hero-cta:hover { gap: 1.25rem; }
+  .hero-media {
+    position: relative;
+    aspect-ratio: 4/5;
+    overflow: hidden;
+    background: var(--paper-deep);
+  }
+  .hero-media video, .hero-media img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    filter: contrast(1.02) saturate(0.95);
+  }
+  .hero-caption {
+    position: absolute; bottom: -1px; left: -1px; right: -1px;
+    background: var(--paper); padding: 1rem 1.25rem;
+    display: flex; justify-content: space-between;
+    font-family: var(--serif); font-style: italic; font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .hero-caption strong {
+    font-style: normal; font-family: var(--sans);
+    font-weight: 500; text-transform: uppercase;
+    letter-spacing: 0.1em; font-size: 0.75rem; color: var(--tuerkis);
+  }
+
+  /* HERO — Cover-Style (Video mit editorial Overlays) ✨ */
+  .hero-cover {
+    padding: clamp(1.5rem, 3vw, 2.5rem) 0 clamp(2rem, 4vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+  }
+  .cover-meta-top,
+  .cover-meta-bottom {
+    display: grid;
+    align-items: baseline;
+    gap: 2rem;
+    padding: 1rem 0;
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .cover-meta-top {
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .cover-meta-top .cat { color: var(--tuerkis); font-weight: 500; }
+  .cover-meta-top .location { text-align: right; }
+  .cover-meta-bottom {
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--rule);
+  }
+  .cover-meta-bottom .right { text-align: right; }
+  .cover-meta-bottom a {
+    color: var(--tuerkis);
+    text-decoration: none;
+    font-weight: 500;
+    padding-bottom: 0.15rem;
+    border-bottom: 1px solid var(--tuerkis);
+    transition: color 0.2s;
+  }
+  .cover-meta-bottom a:hover { color: var(--tuerkis-deep); }
+
+  .cover-frame {
+    position: relative;
+  }
+  .cover-video-wrap {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    box-shadow: 0 30px 60px -25px rgba(23,19,15,0.4);
+    aspect-ratio: 16/9;
+  }
+  .cover-video-wrap video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: contrast(1.02) saturate(0.98);
+  }
+
+  .cover-tag-top {
+    position: absolute;
+    top: clamp(1rem, 2vw, 1.75rem);
+    left: clamp(1rem, 2vw, 1.75rem);
+    background: var(--tuerkis-deep);
+    color: var(--paper);
+    padding: 0.6rem 1.1rem;
+    border-radius: 999px;
+    font-family: var(--sans);
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 500;
+    z-index: 2;
+    box-shadow: 0 10px 25px -8px rgba(23,19,15,0.35);
+  }
+
+  .cover-title-plaque {
+    position: absolute;
+    bottom: clamp(1rem, 3vw, 2rem);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--paper);
+    padding: clamp(1rem, 2vw, 1.5rem) clamp(1.5rem, 3vw, 2.5rem);
+    border-radius: 4px;
+    max-width: min(78%, 760px);
+    z-index: 2;
+    box-shadow: 0 15px 30px -12px rgba(23,19,15,0.3);
+  }
+  .cover-title-plaque h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 3.5vw, 3rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    font-weight: 400;
+    text-align: center;
+    margin: 0;
+  }
+  .cover-title-plaque h1 em {
+    color: var(--tuerkis-deep);
+    font-style: italic;
+  }
+  .cover-title-plaque .work-line {
+    display: block;
+    margin-top: 0.7rem;
+    font-family: var(--sans);
+    font-size: 0.65rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+
+  @media (max-width: 780px) {
+    .nav-toggle { display: block; }
+    nav ul {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--paper);
+      flex-direction: column;
+      align-items: stretch;
+      padding: 0.25rem clamp(1.25rem, 3vw, 3rem) 1.25rem;
+      gap: 0;
+      transform: translateY(-8px);
+      opacity: 0;
+      visibility: hidden;
+      transition: transform 0.3s ease, opacity 0.25s ease, visibility 0s linear 0.3s;
+      box-shadow: 0 15px 30px -10px rgba(23,19,15,0.15);
+      border-bottom: 1px solid var(--rule);
+      z-index: 150;
+    }
+    nav ul.open {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+      transition: transform 0.3s ease, opacity 0.25s ease, visibility 0s;
+    }
+    nav ul li {
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    nav ul li:last-child { border-bottom: none; }
+    nav ul a {
+      font-size: 1.15rem;
+      font-family: var(--serif);
+      color: var(--ink);
+      border-bottom: none;
+      letter-spacing: 0;
+      text-transform: none;
+      padding-bottom: 0;
+      display: block;
+      width: 100%;
+    }
+    .cover-meta-top,
+    .cover-meta-bottom {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+      text-align: center;
+    }
+    .cover-meta-top .location { text-align: center; }
+    .cover-meta-bottom .right { text-align: center; }
+    .cover-title-plaque {
+      position: static;
+      transform: none;
+      max-width: 100%;
+      margin: 1rem 0 0;
+      padding: 0;
+      background: transparent;
+      box-shadow: none;
+      border-radius: 0;
+    }
+    .cover-title-plaque h1 { font-size: clamp(1.4rem, 6vw, 1.9rem); }
+    .cover-title-plaque .work-line { color: var(--ink-soft); }
+    .cover-tag-top {
+      padding: 0.4rem 0.85rem;
+      font-size: 0.6rem;
+    }
+  }
+
+  /* MARQUEE ✨ */
+  .marquee {
+    overflow: hidden;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 0.7rem 0;
+    background: var(--paper);
+    position: relative;
+    /* extend to viewport edges from inside .wrap */
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 3rem;
+    animation: scroll-left 45s linear infinite;
+    white-space: nowrap;
+    width: max-content;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: var(--step-marquee);
+    color: var(--ink);
+  }
+  .marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 3rem;
+    padding-right: 3rem;
+  }
+  .marquee-item::after {
+    content: '✦';
+    color: var(--tuerkis);
+    font-size: 0.55em;
+    font-style: normal;
+  }
+  @keyframes scroll-left {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+
+  /* SECTION HEADS */
+  .section { padding: clamp(4rem, 8vw, 7rem) 0; border-top: 1px solid var(--rule); }
+  .section-head {
+    display: grid; grid-template-columns: auto 1fr auto;
+    align-items: baseline; gap: 2rem;
+    margin-bottom: clamp(3rem, 5vw, 5rem);
+  }
+  .section-num {
+    font-family: var(--serif); font-style: italic;
+    font-size: var(--step-2); color: var(--muted);
+  }
+  .section-head h2 {
+    font-family: var(--serif); font-size: var(--step-3);
+    font-weight: 400; letter-spacing: -0.02em; line-height: 1;
+  }
+  .section-head aside {
+    font-size: 0.8rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--ink-soft); text-align: right;
+  }
+
+  /* STORY — sticky-scroll storytelling ✨ */
+  .story-section {
+    padding: clamp(4rem, 8vw, 8rem) 0;
+    border-top: 1px solid var(--rule);
+  }
+  .story-intro {
+    max-width: 60ch;
+    margin-bottom: clamp(3rem, 5vw, 5rem);
+  }
+  .story-intro .label {
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--tuerkis);
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+  .story-intro h2 {
+    font-family: var(--serif);
+    font-size: var(--step-3);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+  .story-intro h2 em { font-style: italic; color: var(--tuerkis-deep); }
+  .story-intro p {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  .story {
+    display: grid;
+    grid-template-columns: 5fr 6fr;
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: start;
+  }
+  .story-media {
+    position: sticky;
+    top: 6rem;
+    aspect-ratio: 4/5;
+    overflow: hidden;
+    background: var(--paper-deep);
+  }
+  .story-media img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: contrast(1.02);
+  }
+  .story-media-meta {
+    position: absolute;
+    bottom: 1rem; left: 1rem; right: 1rem;
+    background: rgba(237,230,216,0.95);
+    backdrop-filter: blur(6px);
+    padding: 0.9rem 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+  .story-media-meta h4 {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.1rem;
+  }
+  .story-media-meta span {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--tuerkis);
+  }
+
+  .story-text {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(4rem, 8vw, 8rem);
+    padding-block: 2rem clamp(2rem, 6vw, 6rem);
+  }
+  .chapter {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .chapter-tag {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .chapter-tag::before {
+    content: '';
+    width: 2.5rem;
+    height: 1px;
+    background: var(--terracotta);
+  }
+  .chapter h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: var(--step-2);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+  }
+  .chapter h3 em { font-style: italic; color: var(--tuerkis-deep); }
+  .chapter p {
+    font-family: var(--serif);
+    font-size: var(--step-1);
+    line-height: 1.55;
+    color: var(--ink);
+    max-width: 46ch;
+  }
+  .chapter p + p { margin-top: 1rem; }
+
+  /* PORTFOLIO — condensed since story is the featured piece */
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(2rem, 4vw, 3rem);
+  }
+  .work { position: relative; }
+  .work img {
+    width: 100%; height: auto; display: block;
+    filter: contrast(1.02);
+    aspect-ratio: 4/5;
+    object-fit: cover;
+  }
+  .work-meta {
+    display: flex; justify-content: space-between;
+    align-items: baseline; padding: 1rem 0 0; gap: 1rem;
+  }
+  .work-title { font-family: var(--serif); font-style: italic; font-size: var(--step-1); }
+  .work-num {
+    font-family: var(--sans); font-size: 0.75rem;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted);
+  }
+  .work-year { font-family: var(--serif); font-style: italic; color: var(--ink-soft); font-size: 0.9rem; }
+  .portfolio-cta { display: flex; justify-content: center; padding-top: clamp(3rem, 5vw, 5rem); }
+
+  /* HORIZONTAL SCROLL GALLERY ✨ */
+  .h-gallery-section {
+    padding: clamp(4rem, 8vw, 7rem) 0;
+    border-top: 1px solid var(--rule);
+  }
+  .section-head aside.h-hint {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--tuerkis);
+    font-size: 1rem;
+    text-transform: none;
+    letter-spacing: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: flex-end;
+  }
+  .section-head aside.h-hint::before { content: '←'; }
+  .section-head aside.h-hint::after { content: '→'; }
+
+  .h-gallery {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding: clamp(1.25rem, 3vw, 3rem);
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2rem;
+    /* Break out of .wrap to full viewport */
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+  }
+  .h-gallery::-webkit-scrollbar { height: 3px; }
+  .h-gallery::-webkit-scrollbar-track { background: var(--rule); }
+  .h-gallery::-webkit-scrollbar-thumb { background: var(--tuerkis); }
+  .h-gallery-track {
+    display: flex;
+    gap: 2rem;
+    padding: 0 clamp(1.25rem, 3vw, 3rem);
+    width: max-content;
+  }
+  .h-slide {
+    flex: 0 0 auto;
+    width: min(65vw, 460px);
+    scroll-snap-align: center;
+    cursor: pointer;
+  }
+  .h-slide-frame {
+    aspect-ratio: 4/5;
+    overflow: hidden;
+    background: var(--paper-deep);
+    margin-bottom: 1.25rem;
+  }
+  .h-slide-frame img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: contrast(1.02);
+    transition: transform 0.6s cubic-bezier(0.2,0.8,0.2,1);
+  }
+  .h-slide:hover .h-slide-frame img { transform: scale(1.04); }
+  .h-slide-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+  .h-slide-info .work-num {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.35rem;
+  }
+  .h-slide-info h3 {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--step-1);
+    line-height: 1.1;
+  }
+  .h-slide-info .year {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
+
+  /* BLOG ✨ — journal split-screen (from V3b, adapted to Papier & Türkis) */
+  .blog { padding: clamp(4rem, 8vw, 7rem) 0; border-top: 1px solid var(--rule); }
+  .blog-entries { display: flex; flex-direction: column; }
+  .blog-entry {
+    display: grid;
+    grid-template-columns: 6fr 5fr;
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+    padding: clamp(1.5rem, 2.5vw, 2rem) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .blog-entry:first-child { padding-top: 0; }
+  .blog-entry:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .blog-entry:nth-child(even) .blog-entry-media { order: 2; }
+  .blog-entry:nth-child(even) .blog-entry-body { order: 1; }
+  .blog-entry:nth-child(even) { grid-template-columns: 5fr 6fr; }
+
+  .blog-entry-media {
+    aspect-ratio: 3/2;
+    overflow: hidden;
+    border-radius: 4px;
+    position: relative;
+  }
+  .blog-entry-media img {
+    width: 100%; height: 100%; object-fit: cover;
+    object-position: center;
+    filter: contrast(1.02) saturate(1.02);
+    transition: transform 0.7s cubic-bezier(0.2,0.8,0.2,1);
+  }
+  .blog-entry:hover .blog-entry-media img { transform: scale(1.03); }
+
+  .blog-entry-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.95rem;
+  }
+  .blog-entry-num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 0.85;
+    color: var(--tuerkis);
+    letter-spacing: -0.03em;
+  }
+  .blog-entry-meta {
+    display: flex;
+    gap: 1.25rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--rule);
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  .blog-entry-meta .blog-cat { color: var(--terracotta); font-weight: 500; }
+  .blog-entry-meta .read-time {
+    margin-left: auto;
+    font-family: var(--serif);
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+  }
+  .blog-entry-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.4rem, 2.2vw, 2.1rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .blog-entry-title em { font-style: italic; color: var(--tuerkis-deep); }
+  .blog-entry-excerpt {
+    font-family: var(--serif);
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 52ch;
+  }
+  .blog-entry-cta {
+    align-self: flex-start;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--ink);
+    transition: color 0.25s, border-color 0.25s, gap 0.25s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .blog-entry-cta:hover {
+    color: var(--tuerkis);
+    border-color: var(--tuerkis);
+    gap: 1rem;
+  }
+  .blog-more { text-align: center; margin-top: 3rem; }
+
+  /* MANIFESTO */
+  .pull {
+    padding: clamp(4rem, 8vw, 8rem) 0;
+    border-top: 1px solid var(--rule);
+    text-align: center;
+  }
+  .pull blockquote {
+    font-family: var(--serif); font-style: italic;
+    font-size: var(--step-3); font-weight: 400;
+    line-height: 1.15; letter-spacing: -0.02em;
+    max-width: 22ch; margin: 0 auto; color: var(--ink);
+  }
+  .pull blockquote::before, .pull blockquote::after {
+    content: ''; display: block; width: 3rem; height: 1px;
+    background: var(--tuerkis); margin: 2rem auto;
+  }
+  .pull cite {
+    font-style: normal; font-size: 0.75rem;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+  }
+
+  /* SHOP */
+  .shop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
+  .product {
+    background: var(--paper-deep); padding: 1.25rem;
+    display: flex; flex-direction: column; gap: 1.5rem;
+    transition: background 0.3s;
+  }
+  .product:hover { background: #DBCFB6; }
+  .product-img { aspect-ratio: 1; overflow: hidden; background: var(--paper); }
+  .product-img img { width: 100%; height: 100%; object-fit: cover; }
+  .product-body { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 1rem; }
+  .product-title { font-family: var(--serif); font-style: italic; font-size: var(--step-1); }
+  .product-price {
+    font-family: var(--sans); font-weight: 500;
+    font-size: 0.9rem; letter-spacing: 0.05em; color: var(--terracotta);
+  }
+  .product-cta {
+    font-family: var(--sans); font-size: 0.75rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--ink); text-decoration: none;
+    padding-top: 0.5rem; border-top: 1px solid var(--rule);
+  }
+  .product-cta:hover { color: var(--tuerkis); }
+
+  /* ARTIST — brought back from the original design */
+  .artist {
+    display: grid;
+    grid-template-columns: 4fr 8fr;
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+    padding: clamp(4rem, 8vw, 7rem) 0;
+    border-top: 1px solid var(--rule);
+  }
+  .artist-mark {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(5rem, 12vw, 12rem);
+    line-height: 0.85;
+    color: var(--tuerkis);
+    letter-spacing: -0.05em;
+  }
+  .artist p {
+    font-family: var(--serif);
+    font-size: var(--step-2);
+    line-height: 1.35;
+    color: var(--ink);
+    max-width: 42ch;
+    margin-bottom: 2rem;
+  }
+  .artist p em { color: var(--terracotta); font-style: italic; }
+
+  /* CONTACT ✨ */
+  .contact {
+    padding: clamp(4rem, 8vw, 7rem) 0 clamp(4rem, 7vw, 6rem);
+    border-top: 1px solid var(--rule);
+    text-align: center;
+  }
+  .contact-label {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+  .contact-question {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 26ch;
+    margin: 0 auto 1.5rem;
+    color: var(--ink);
+  }
+  .contact-question em {
+    font-style: italic;
+    color: var(--tuerkis-deep);
+  }
+  .contact-text {
+    font-family: var(--serif);
+    font-size: clamp(1.05rem, 1.2vw, 1.25rem);
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 52ch;
+    margin: 0 auto 2.5rem;
+  }
+  .contact-ctas {
+    display: flex;
+    gap: 1.25rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 3.5rem;
+  }
+  .contact-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.95rem 1.9rem;
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.25s;
+  }
+  .contact-cta.primary {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .contact-cta.primary:hover {
+    background: var(--tuerkis-deep);
+    border-color: var(--tuerkis-deep);
+    transform: translateY(-2px);
+  }
+  .contact-cta.secondary {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--rule);
+  }
+  .contact-cta.secondary:hover {
+    color: var(--tuerkis);
+    border-color: var(--tuerkis);
+    transform: translateY(-2px);
+  }
+  .contact-social {
+    display: flex;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    justify-content: center;
+    flex-wrap: wrap;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--rule);
+    max-width: 32rem;
+    margin: 0 auto;
+  }
+  .contact-social a {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .contact-social a:hover { color: var(--tuerkis); }
+
+  /* COLOPHON FOOTER ✨ */
+  .colophon {
+    margin-top: clamp(4rem, 8vw, 8rem);
+    border-top: 1px solid var(--rule);
+    padding: clamp(3rem, 6vw, 5rem) 0 2rem;
+  }
+  .colophon-hero {
+    text-align: center;
+    padding-bottom: clamp(3rem, 5vw, 5rem);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: clamp(3rem, 5vw, 5rem);
+  }
+  .colophon-edition {
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+  .colophon-hero h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(3rem, 8vw, 6rem);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+  }
+  .colophon-hero h3 em { font-style: italic; color: var(--tuerkis); }
+  .colophon-hero .tag {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: var(--step-1);
+  }
+
+  .colophon-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 4rem;
+  }
+  .colophon-about h4 {
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--tuerkis);
+    margin-bottom: 1.25rem;
+    font-weight: 500;
+  }
+  .colophon-about p {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 42ch;
+  }
+  .colophon-col h4 {
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--tuerkis);
+    margin-bottom: 1.25rem;
+    font-weight: 500;
+  }
+  .colophon-col a {
+    display: block;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 0.35rem 0;
+    font-family: var(--serif);
+    font-style: italic;
+  }
+  .colophon-col a:hover { color: var(--tuerkis); }
+
+  .colophon-plate {
+    background: var(--paper-deep);
+    padding: 2rem;
+    margin-bottom: 3rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+  .colophon-plate dt {
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    font-size: 0.65rem;
+    margin-bottom: 0.35rem;
+  }
+  .colophon-plate dd {
+    color: var(--ink);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 0.95rem;
+  }
+
+  .colophon-fine {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .colophon-fine .center {
+    text-align: center;
+    font-family: var(--serif);
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
+  .colophon-fine .right { text-align: right; }
+  .colophon-fine a { color: inherit; text-decoration: none; margin-left: 1.5rem; }
+  .colophon-fine a:hover { color: var(--tuerkis); }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-media { aspect-ratio: 3/4; order: -1; }
+    .story { grid-template-columns: 1fr; }
+    .story-media { position: relative; top: 0; }
+    .artist { grid-template-columns: 1fr; }
+    .blog-entry,
+    .blog-entry:nth-child(even) { grid-template-columns: 1fr; }
+    .blog-entry:nth-child(even) .blog-entry-media { order: 1; }
+    .blog-entry:nth-child(even) .blog-entry-body { order: 2; }
+    .portfolio-grid, .shop-grid { grid-template-columns: 1fr; }
+    .colophon-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .colophon-plate { grid-template-columns: 1fr 1fr; }
+    .colophon-fine { grid-template-columns: 1fr; text-align: center; }
+    .colophon-fine .right { text-align: center; }
+    .colophon-fine a { margin-left: 0; margin-right: 1.5rem; }
+    .section-head { grid-template-columns: 1fr; gap: 0.5rem; }
+    .section-head aside { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<nav>
+  <div class="logo">antonio <span>troiano</span></div>
+  <ul>
+    <li><a href="#geschichte">Geschichten</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#shop">Shop</a></li>
+    <li><a href="#kontakt">Kontakt</a></li>
+  </ul>
+  <button class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<section class="hero-cover">
+  <div class="cover-meta-top">
+    <span class="cat">Abstrakte Malerei</span>
+    <span class="location">Atelier Frankfurt am Main</span>
+  </div>
+
+  <div class="cover-frame">
+    <div class="cover-video-wrap">
+      <span class="cover-tag-top">— Aktuell im Atelier</span>
+      <video autoplay muted loop playsinline poster="https://ik.imagekit.io/atart/portfolio/2024_no10_1.webp?tr=w-1200,c-at_max,q-70,f-avif">
+        <source src="https://ik.imagekit.io/atart/HeroVideo1280x720v3.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="cover-title-plaque">
+      <h1>Farbe als <em>Sprache,</em> Leinwand als Raum.</h1>
+      <span class="work-line">N° 10 · Gebirgskette · Acryl auf Leinwand, 2024</span>
+    </div>
+  </div>
+
+  <div class="cover-meta-bottom">
+    <span>Antonio Troiano · seit 2011</span>
+    <span class="right"><a href="#geschichte">Zur ersten Geschichte ↓</a></span>
+  </div>
+</section>
+
+<!-- MARQUEE ✨ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span class="marquee-item">Abstrakte Malerei</span>
+    <span class="marquee-item">Frankfurt am Main</span>
+    <span class="marquee-item">seit 2011</span>
+    <span class="marquee-item">Handgemalt</span>
+    <span class="marquee-item">Unikate</span>
+    <span class="marquee-item">Signiert</span>
+    <span class="marquee-item">Versand DE</span>
+    <span class="marquee-item">Abstrakte Malerei</span>
+    <span class="marquee-item">Frankfurt am Main</span>
+    <span class="marquee-item">seit 2011</span>
+    <span class="marquee-item">Handgemalt</span>
+    <span class="marquee-item">Unikate</span>
+    <span class="marquee-item">Signiert</span>
+    <span class="marquee-item">Versand DE</span>
+  </div>
+</div>
+
+<!-- STORY — sticky-scroll ✨ -->
+<section class="story-section" id="geschichte">
+  <div class="story-intro">
+    <span class="label">— Werk &amp; Geschichte</span>
+    <h2>Hinter jedem Werk <em>eine Geschichte.</em></h2>
+    <p>Was auf der Leinwand entsteht, beginnt oft mit einem Moment, einer Stimmung, einem Blick aus dem Atelierfenster. Hier erzähle ich, wie ein Bild wird.</p>
+  </div>
+
+  <div class="story">
+    <div class="story-media">
+      <img src="https://ik.imagekit.io/atart/portfolio/2024_no10_1.webp?tr=w-1000,c-at_max,q-75,f-avif" alt="Gebirgskette">
+      <div class="story-media-meta">
+        <h4>N° 10 · Gebirgskette</h4>
+        <span>2024</span>
+      </div>
+    </div>
+
+    <div class="story-text">
+      <div class="chapter">
+        <div class="chapter-tag">Kapitel I · Der Beginn</div>
+        <h3>Ein Blick <em>aus dem Fenster.</em></h3>
+        <p>Es begann an einem stillen Morgen im Atelier, mit dem Blick auf einen fernen Bergkamm — verschleiert, kaum sichtbar, mehr geahnt als gesehen. Ich wusste nicht, ob es eine Landschaft werden würde. Ich wusste nur, dass ich diese Stille festhalten wollte.</p>
+        <p>Manchmal reicht ein Moment am Morgen, um die Farbrichtung des ganzen Bildes zu bestimmen.</p>
+      </div>
+
+      <div class="chapter">
+        <div class="chapter-tag">Kapitel II · Der Prozess</div>
+        <h3>Schicht für Schicht, <em>Tag für Tag.</em></h3>
+        <p>Die ersten Schichten waren tief und dunkel, fast erdrückend. Erst nach mehreren Tagen, mit jeder neuen Schicht Acryl, öffneten sich Türkis- und Naturtöne wie Licht, das langsam den Nebel durchbricht.</p>
+        <p>Ich male nie mit einem festen Plan. Die Leinwand entscheidet mit — sie sagt mir, wann ein Bereich Ruhe braucht und wann er Bewegung will.</p>
+      </div>
+
+      <div class="chapter">
+        <div class="chapter-tag">Kapitel III · Was bleibt</div>
+        <h3>Nicht die Berge — <em>das Warten.</em></h3>
+        <p>Heute sehe ich in diesem Werk nicht mehr die Berge. Sondern das Warten. Die Ruhe vor dem Moment, in dem sich alles klärt. Für mich ist das die eigentliche Bedeutung dieses Bildes — auch wenn jeder Betrachter etwas anderes darin finden wird.</p>
+        <p><em>Und genau darum geht es.</em></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WEITERE WERKE — horizontal scroll ✨ -->
+<section class="h-gallery-section" id="portfolio">
+  <div class="section-head">
+    <span class="section-num">I</span>
+    <h2>Weitere Werke</h2>
+    <aside class="h-hint">horizontal scrollen</aside>
+  </div>
+
+  <div class="h-gallery">
+    <div class="h-gallery-track">
+      <article class="h-slide">
+        <div class="h-slide-frame">
+          <img src="https://ik.imagekit.io/atart/portfolio/2023_no2_1.webp?tr=w-900,c-at_max,q-75,f-avif" alt="No. 02">
+        </div>
+        <div class="h-slide-info">
+          <div>
+            <div class="work-num">N° 02 · Acryl</div>
+            <h3>Ohne Titel</h3>
+          </div>
+          <span class="year">2023</span>
+        </div>
+      </article>
+
+      <article class="h-slide">
+        <div class="h-slide-frame">
+          <img src="https://ik.imagekit.io/atart/portfolio/2024_no3.webp?tr=w-900,c-at_max,q-75,f-avif" alt="No. 03">
+        </div>
+        <div class="h-slide-info">
+          <div>
+            <div class="work-num">N° 03 · Acryl</div>
+            <h3>Ohne Titel</h3>
+          </div>
+          <span class="year">2024</span>
+        </div>
+      </article>
+
+      <article class="h-slide">
+        <div class="h-slide-frame">
+          <img src="https://ik.imagekit.io/atart/portfolio/2023_no10.webp?tr=w-900,c-at_max,q-75,f-avif" alt="No. 10">
+        </div>
+        <div class="h-slide-info">
+          <div>
+            <div class="work-num">N° 10 · Mixed</div>
+            <h3>Ohne Titel</h3>
+          </div>
+          <span class="year">2023</span>
+        </div>
+      </article>
+
+      <article class="h-slide">
+        <div class="h-slide-frame">
+          <img src="https://ik.imagekit.io/atart/shop/2024_no4_1.webp?tr=w-900,c-at_max,q-75,f-avif" alt="No. 04">
+        </div>
+        <div class="h-slide-info">
+          <div>
+            <div class="work-num">N° 04 · Acryl</div>
+            <h3>Ohne Titel</h3>
+          </div>
+          <span class="year">2024</span>
+        </div>
+      </article>
+
+      <article class="h-slide">
+        <div class="h-slide-frame">
+          <img src="https://ik.imagekit.io/atart/shop/2022_no8_1.webp?tr=w-900,c-at_max,q-75,f-avif" alt="No. 08">
+        </div>
+        <div class="h-slide-info">
+          <div>
+            <div class="work-num">N° 08 · Acryl</div>
+            <h3>Ohne Titel</h3>
+          </div>
+          <span class="year">2022</span>
+        </div>
+      </article>
+
+      <article class="h-slide">
+        <div class="h-slide-frame">
+          <img src="https://ik.imagekit.io/atart/portfolio/2024_no10_1.webp?tr=w-900,c-at_max,q-75,f-avif" alt="Gebirgskette">
+        </div>
+        <div class="h-slide-info">
+          <div>
+            <div class="work-num">N° 10 · Acryl</div>
+            <h3>Gebirgskette</h3>
+          </div>
+          <span class="year">2024</span>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <div class="portfolio-cta">
+    <a href="#" class="hero-cta"><span>Alle Werke ansehen</span><span>→</span></a>
+  </div>
+</section>
+
+<!-- BLOG — Journal Split-Screen ✨ -->
+<section class="blog" id="blog">
+  <div class="section-head">
+    <span class="section-num">II</span>
+    <h2>Aus dem Atelier</h2>
+    <aside>Journal</aside>
+  </div>
+
+  <div class="blog-entries">
+    <article class="blog-entry">
+      <div class="blog-entry-media">
+        <img src="https://ik.imagekit.io/atart/portfolio/2023_no2_1.webp?tr=w-1000,c-at_max,q-75,f-avif" alt="Zehn Jahre Pause">
+      </div>
+      <div class="blog-entry-body">
+        <div class="blog-entry-num">01</div>
+        <div class="blog-entry-meta">
+          <span class="blog-cat">Erinnerung</span>
+          <span>April 2026</span>
+          <span class="read-time">6 Min. Lesezeit</span>
+        </div>
+        <h3 class="blog-entry-title">Zehn Jahre Pause — und der Weg zurück an die <em>Leinwand</em></h3>
+        <p class="blog-entry-excerpt">Warum ich das Malen erst verlor und dann wiederfand. Eine ehrliche Notiz über Zweifel, Neustart und Vertrauen in den eigenen Pinselstrich — geschrieben im Frühling nach der ersten wiedergefundenen Serie.</p>
+        <a href="#" class="blog-entry-cta"><span>Weiterlesen</span><span>→</span></a>
+      </div>
+    </article>
+
+    <article class="blog-entry">
+      <div class="blog-entry-media">
+        <img src="https://ik.imagekit.io/atart/portfolio/2024_no3.webp?tr=w-1000,c-at_max,q-75,f-avif" alt="Türkis, immer wieder">
+      </div>
+      <div class="blog-entry-body">
+        <div class="blog-entry-num">02</div>
+        <div class="blog-entry-meta">
+          <span class="blog-cat">Reflexion</span>
+          <span>Februar 2026</span>
+          <span class="read-time">5 Min. Lesezeit</span>
+        </div>
+        <h3 class="blog-entry-title">Türkis, immer wieder — die Farbe, die <em>zurückkommt</em></h3>
+        <p class="blog-entry-excerpt">Warum bestimmte Farben in meinen Werken immer wiederkehren, und was das über die eigene künstlerische Handschrift verrät. Ein Nachdenken über Farbtreue, Instinkt und die Wiederholung als Signatur.</p>
+        <a href="#" class="blog-entry-cta"><span>Weiterlesen</span><span>→</span></a>
+      </div>
+    </article>
+  </div>
+
+  <div class="blog-more">
+    <a href="#" class="hero-cta"><span>Alle Geschichten ansehen</span><span>→</span></a>
+  </div>
+</section>
+
+<section class="pull">
+  <blockquote>
+    Jedes Kunstwerk lebt davon, dass jeder Betrachter etwas Eigenes darin entdeckt.
+    <cite>— Antonio Troiano</cite>
+  </blockquote>
+</section>
+
+<section class="section" id="shop">
+  <div class="section-head">
+    <span class="section-num">III</span>
+    <h2>Erwerbbare Originale</h2>
+    <aside>Handgefertigt · Versand DE</aside>
+  </div>
+
+  <div class="shop-grid">
+    <article class="product">
+      <div class="product-img"><img src="https://ik.imagekit.io/atart/shop/2024_no4_1.webp?tr=w-600,h-600,c-fill,q-75,f-auto" alt="No. 04"></div>
+      <div class="product-body">
+        <div>
+          <div class="work-num" style="margin-bottom:0.35rem">N° 04 · 2024</div>
+          <div class="product-title">Ohne Titel</div>
+        </div>
+        <div class="product-price">240 €</div>
+      </div>
+      <a href="#" class="product-cta">Anfragen →</a>
+    </article>
+
+    <article class="product">
+      <div class="product-img"><img src="https://ik.imagekit.io/atart/shop/2022_no8_1.webp?tr=w-600,h-600,c-fill,q-75,f-auto" alt="No. 08"></div>
+      <div class="product-body">
+        <div>
+          <div class="work-num" style="margin-bottom:0.35rem">N° 08 · 2022</div>
+          <div class="product-title">Ohne Titel</div>
+        </div>
+        <div class="product-price">200 €</div>
+      </div>
+      <a href="#" class="product-cta">Anfragen →</a>
+    </article>
+
+    <article class="product">
+      <div class="product-img"><img src="https://ik.imagekit.io/atart/shop/2023_no2_1.webp?tr=w-600,h-600,c-fill,q-75,f-auto" alt="No. 02"></div>
+      <div class="product-body">
+        <div>
+          <div class="work-num" style="margin-bottom:0.35rem">N° 02 · 2023</div>
+          <div class="product-title">Ohne Titel</div>
+        </div>
+        <div class="product-price">240 €</div>
+      </div>
+      <a href="#" class="product-cta">Anfragen →</a>
+    </article>
+  </div>
+</section>
+
+<!-- ARTIST — brought back -->
+<section class="artist" id="atelier">
+  <div class="artist-mark">at.</div>
+  <div>
+    <p>Nach mehr als einem Jahrzehnt habe ich die Malerei <em>wiedergefunden</em> — und meinen Weg zur abstrakten Kunst entdeckt. Mich reizt vor allem die Freiheit: keinem Stil folgen zu müssen, sondern auszudrücken, was ich gerade fühle.</p>
+    <a href="#" class="hero-cta"><span>Mehr über den Künstler</span><span>→</span></a>
+  </div>
+</section>
+
+<!-- CONTACT — Editorial invitation, not a form -->
+<section class="contact" id="kontakt">
+  <span class="contact-label">— Kontakt</span>
+  <h2 class="contact-question">Ein Werk gefunden? Oder eine Idee für einen <em>Auftrag</em>?</h2>
+  <p class="contact-text">Ich freue mich über jede Nachricht — ob zu einem bestimmten Bild, einer Auftragsarbeit für deinen Raum oder einfach so.</p>
+  <div class="contact-ctas">
+    <a href="mailto:kontakt@antonio-troiano.de?subject=Anfrage%20%C3%BCber%20antonio-troiano.de" class="contact-cta primary">Schreib mir →</a>
+    <a href="mailto:kontakt@antonio-troiano.de?subject=Anfrage%3A%20Auftragsarbeit&body=Hallo%20Antonio%2C%0A%0Aich%20interessiere%20mich%20f%C3%BCr%20eine%20Auftragsarbeit.%0A%0AWerk-Idee%3A%0A%0AGew%C3%BCnschtes%20Format%3A%0A%0AFarbrichtung%3A%0A%0ABudget-Rahmen%3A%0A%0AZeitplan%3A%0A%0AViele%20Gr%C3%BC%C3%9Fe" class="contact-cta secondary">Auftrag anfragen →</a>
+  </div>
+  <div class="contact-social">
+    <a href="https://instagram.com" target="_blank" rel="noopener">Instagram ↗</a>
+    <a href="https://youtube.com" target="_blank" rel="noopener">YouTube ↗</a>
+    <a href="https://pinterest.com" target="_blank" rel="noopener">Pinterest ↗</a>
+  </div>
+</section>
+
+<!-- COLOPHON FOOTER ✨ -->
+<footer class="colophon">
+  <div class="colophon-grid">
+    <div class="colophon-about">
+      <h4>Über diese Seite</h4>
+      <p>Handgesetzt in Vollkorn und Karla. Bildmaterial aus dem Atelier des Künstlers, aufgenommen zwischen 2022 und 2026. Alle Werke handgemalt, jedes Original mit Signatur und Zertifikat.</p>
+    </div>
+    <div class="colophon-col">
+      <h4>Werke</h4>
+      <a href="#">Portfolio</a>
+      <a href="#">Shop</a>
+      <a href="#">Auftragsarbeit</a>
+    </div>
+    <div class="colophon-col">
+      <h4>Folgen</h4>
+      <a href="#">Instagram</a>
+      <a href="#">YouTube</a>
+      <a href="#">Pinterest</a>
+    </div>
+    <div class="colophon-col">
+      <h4>Kontakt</h4>
+      <a href="#">Nachricht senden</a>
+      <a href="#">Atelier besuchen</a>
+      <a href="#">Newsletter</a>
+    </div>
+  </div>
+
+  <dl class="colophon-plate">
+    <div>
+      <dt>Werkverzeichnis</dt>
+      <dd>14 Arbeiten aktiv</dd>
+    </div>
+    <div>
+      <dt>Aktiv seit</dt>
+      <dd>2011</dd>
+    </div>
+    <div>
+      <dt>Schriften</dt>
+      <dd>Vollkorn &amp; Karla</dd>
+    </div>
+    <div>
+      <dt>Standort</dt>
+      <dd>Frankfurt a. M.</dd>
+    </div>
+  </dl>
+
+  <div class="colophon-fine">
+    <div>© 2026 · Antonio Troiano</div>
+    <div class="center">Gesetzt und geliebt in Frankfurt am Main.</div>
+    <div class="right">
+      <a href="#">Impressum</a>
+      <a href="#">Datenschutz</a>
+    </div>
+  </div>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  const nav = document.querySelector('nav');
+  if(!nav) return;
+  const navToggle = document.querySelector('.nav-toggle');
+  const navMenu = document.querySelector('nav ul');
+  let lastY = window.pageYOffset;
+  let ticking = false;
+  const threshold = 80;
+  function update(){
+    const y = window.pageYOffset;
+    const diff = y - lastY;
+    const menuOpen = navMenu && navMenu.classList.contains('open');
+    if(y > threshold) nav.classList.add('scrolled');
+    else { nav.classList.remove('scrolled'); nav.classList.remove('hidden'); }
+    if(!menuOpen && Math.abs(diff) > 6 && y > threshold){
+      if(diff > 0) nav.classList.add('hidden');
+      else nav.classList.remove('hidden');
+    }
+    lastY = y;
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => {
+    if(!ticking){ requestAnimationFrame(update); ticking = true; }
+  }, { passive: true });
+
+  // Burger menu toggle (dropdown below nav)
+  if (navToggle && navMenu) {
+    navToggle.addEventListener('click', () => {
+      const isOpen = navMenu.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+    navMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>
