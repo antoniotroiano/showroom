@@ -30,38 +30,45 @@
     --sans: 'Karla', -apple-system, sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; overflow-x: hidden; }
+  html { scroll-behavior: smooth; overflow-x: clip; }
   body {
-    overflow-x: hidden;
+    overflow-x: clip;
     background: var(--paper);
     color: var(--ink);
     font-family: var(--sans);
     font-size: var(--step-0);
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
   }
   .wrap { max-width: 1440px; margin: 0 auto; padding: 0 clamp(1.25rem, 3vw, 3rem); }
 
-  /* NAV — smart sticky */
+  /* NAV — smart sticky, full-bleed bar */
   nav {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: baseline;
-    padding: 2rem 0 3rem;
-    gap: 2rem;
     border-bottom: 1px solid var(--rule);
     position: sticky;
     top: 0;
     z-index: 100;
     background: var(--paper);
-    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), padding 0.4s ease, background 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s ease;
+  }
+  .nav-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 2rem clamp(1.25rem, 3vw, 3rem) 3rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 2rem;
+    transition: padding 0.4s ease;
   }
   nav.scrolled {
-    padding: 1.1rem 0;
     background: rgba(237, 230, 216, 0.88);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+  }
+  nav.scrolled .nav-inner {
+    padding-top: 1.1rem;
+    padding-bottom: 1.1rem;
   }
   nav.hidden { transform: translateY(-100%); }
   .logo {
@@ -573,6 +580,7 @@
   }
   .work-year { font-family: var(--serif); font-style: italic; color: var(--ink-soft); font-size: 0.9rem; }
   .portfolio-cta { display: flex; justify-content: center; padding-top: clamp(3rem, 5vw, 5rem); }
+  .shop-more { display: flex; justify-content: center; padding-top: clamp(3rem, 5vw, 5rem); }
 
   /* HORIZONTAL SCROLL GALLERY ✨ */
   .h-gallery-section {
@@ -1089,22 +1097,24 @@
 </head>
 <body>
 
-<div class="wrap">
-
 <nav>
-  <div class="logo">antonio <span>troiano</span></div>
-  <ul>
-    <li><a href="#geschichte">Geschichten</a></li>
-    <li><a href="#portfolio">Portfolio</a></li>
-    <li><a href="#shop">Shop</a></li>
-    <li><a href="#kontakt">Kontakt</a></li>
-  </ul>
-  <button class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
+  <div class="nav-inner">
+    <div class="logo">antonio <span>troiano</span></div>
+    <ul>
+      <li><a href="#geschichte">Geschichten</a></li>
+      <li><a href="#portfolio">Portfolio</a></li>
+      <li><a href="#shop">Shop</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
 </nav>
+
+<div class="wrap">
 
 <section class="hero-cover">
   <div class="cover-meta-top">
@@ -1388,6 +1398,10 @@
       <a href="#" class="product-cta">Anfragen →</a>
     </article>
   </div>
+
+  <div class="shop-more">
+    <a href="#" class="hero-cta"><span>Alle Originale ansehen</span><span>→</span></a>
+  </div>
 </section>
 
 <!-- ARTIST — brought back -->
@@ -1480,21 +1494,56 @@
   const navToggle = document.querySelector('.nav-toggle');
   const navMenu = document.querySelector('nav ul');
   let lastY = window.pageYOffset;
+  let lastShowY = window.pageYOffset;
+  let lastHideY = window.pageYOffset;
   let ticking = false;
   const threshold = 80;
+  const hideDistance = 30;
+  const showDistance = 5;
+
   function update(){
     const y = window.pageYOffset;
-    const diff = y - lastY;
     const menuOpen = navMenu && navMenu.classList.contains('open');
-    if(y > threshold) nav.classList.add('scrolled');
-    else { nav.classList.remove('scrolled'); nav.classList.remove('hidden'); }
-    if(!menuOpen && Math.abs(diff) > 6 && y > threshold){
-      if(diff > 0) nav.classList.add('hidden');
-      else nav.classList.remove('hidden');
+
+    if(y <= threshold){
+      nav.classList.remove('scrolled');
+      nav.classList.remove('hidden');
+      lastShowY = y;
+      lastHideY = y;
+      lastY = y;
+      ticking = false;
+      return;
     }
+
+    nav.classList.add('scrolled');
+
+    if(!menuOpen){
+      const isHidden = nav.classList.contains('hidden');
+      if(isHidden){
+        // Show as soon as user scrolls up more than showDistance from where it was hidden
+        if(y < lastHideY - showDistance){
+          nav.classList.remove('hidden');
+          lastShowY = y;
+        } else if(y > lastHideY){
+          // User scrolled further down while hidden - update the hide point
+          lastHideY = y;
+        }
+      } else {
+        // Hide if user scrolls down hideDistance+ from the last show point
+        if(y > lastShowY + hideDistance){
+          nav.classList.add('hidden');
+          lastHideY = y;
+        } else if(y < lastShowY){
+          // User scrolled up while visible - update the show point
+          lastShowY = y;
+        }
+      }
+    }
+
     lastY = y;
     ticking = false;
   }
+
   window.addEventListener('scroll', () => {
     if(!ticking){ requestAnimationFrame(update); ticking = true; }
   }, { passive: true });
