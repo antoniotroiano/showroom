@@ -641,7 +641,17 @@
     width: 100vw;
     margin-left: calc(50% - 50vw);
   }
-  .h-gallery.is-wheeling { scroll-snap-type: none; }
+  .h-gallery { cursor: grab; }
+  .h-gallery img {
+    -webkit-user-drag: none;
+    user-drag: none;
+    user-select: none;
+  }
+  .h-gallery.is-dragging {
+    cursor: grabbing;
+    scroll-snap-type: none;
+    user-select: none;
+  }
   .h-gallery::-webkit-scrollbar { height: 3px; }
   .h-gallery::-webkit-scrollbar-track { background: var(--rule); }
   .h-gallery::-webkit-scrollbar-thumb { background: var(--tuerkis); }
@@ -1680,24 +1690,40 @@
   // Normales, vertikales Mausrad-Scrollen in horizontales Scrollen umleiten,
   // sobald der Cursor über der Galerie ist. Trackpad-/Touch-Nutzer swipen
   // ohnehin schon horizontal (deltaX) und sind davon nicht betroffen.
-  var wheelTimer = null;
-  gallery.addEventListener('wheel', function (e) {
-    if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return; // echte horizontale Wischgeste -> normal durchlassen
+  // Verhindert, dass der Browser Bilder als eigenes "Drag-and-Drop"-Objekt aufnimmt —
+  // sonst "greift" man das Bild selbst statt die Galerie zu scrollen.
+  gallery.addEventListener('dragstart', function (e) { e.preventDefault(); });
 
-    var delta = e.deltaY;
-    if (e.deltaMode === 1) delta *= 18;                     // "Zeilen"-Modus -> ungefähr in Pixel
-    else if (e.deltaMode === 2) delta *= gallery.clientHeight; // "Seiten"-Modus -> ungefähr in Pixel
+  // Klicken-und-Ziehen ("Greifen") — normales Scrollen bleibt überall unangetastet,
+  // nur wer aktiv klickt und zieht, bewegt die Galerie.
+  var isDown = false, dragMoved = false, startX = 0, startScroll = 0;
 
-    var atStart = gallery.scrollLeft <= 0;
-    var atEnd = gallery.scrollLeft >= gallery.scrollWidth - gallery.clientWidth - 1;
-    if ((delta < 0 && atStart) || (delta > 0 && atEnd)) return; // an den Rändern normal weiterscrollen lassen
+  gallery.addEventListener('mousedown', function (e) {
+    isDown = true;
+    dragMoved = false;
+    gallery.classList.add('is-dragging');
+    startX = e.pageX;
+    startScroll = gallery.scrollLeft;
+  });
 
-    e.preventDefault();
-    gallery.classList.add('is-wheeling');
-    gallery.scrollLeft += delta;
-    clearTimeout(wheelTimer);
-    wheelTimer = setTimeout(function () { gallery.classList.remove('is-wheeling'); }, 150);
-  }, { passive: false });
+  window.addEventListener('mousemove', function (e) {
+    if (!isDown) return;
+    var walk = e.pageX - startX;
+    if (Math.abs(walk) > 4) dragMoved = true;
+    gallery.scrollLeft = startScroll - walk;
+  });
+
+  window.addEventListener('mouseup', function () {
+    if (!isDown) return;
+    isDown = false;
+    gallery.classList.remove('is-dragging');
+  });
+
+  // Verhindert, dass ein Ziehen versehentlich als Klick auf eine Karte zählt
+  // (falls dort später mal ein Link/Klick-Verhalten ergänzt wird).
+  gallery.addEventListener('click', function (e) {
+    if (dragMoved) { e.preventDefault(); e.stopPropagation(); }
+  }, true);
 
   var prevBtn = document.querySelector('.h-nav-btn[data-dir="-1"]');
   var nextBtn = document.querySelector('.h-nav-btn[data-dir="1"]');
